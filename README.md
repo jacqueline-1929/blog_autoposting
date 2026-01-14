@@ -4,13 +4,13 @@ Clean, efficient blog export and auto-posting for GoHighLevel.
 
 ## Quick Start
 
-### Option 1: CSV Export (No Setup)
+### CSV Export (No Setup)
 ```bash
-python weekly.py
+python core_exporter.py
 ```
-Creates `csv_blogs/weekly_blogs.csv` ready for GHL import.
+Creates `csv_blogs/blog_export.csv` ready for GHL import.
 
-### Option 2: Auto-Post to GHL
+### Auto-Post to GHL
 ```bash
 # Setup (one time)
 pip install requests
@@ -26,14 +26,15 @@ Blogs automatically post to GHL + CSV backup created.
 
 ## Files
 
-### Core Scripts (3 files)
-- **`core_exporter.py`** - Main export engine
+### Scripts (2 files)
+- **`core_exporter.py`** - CSV export engine
 - **`ghl_poster.py`** - Auto-post to GHL
-- **`weekly.py`** - Simple weekly runner
 
 ### Config
 - **`ghl_config.json.example`** - Config template
-- **`requirements.txt`** - Dependencies (just requests)
+- **`requirements.txt`** - Just `requests` (for GHL only)
+
+**Total: 4 files. That's it.**
 
 ---
 
@@ -41,7 +42,7 @@ Blogs automatically post to GHL + CSV backup created.
 
 ```
 new_blogs/          →  Script  →  csv_blogs/
-  blog1.txt                         weekly_blogs.csv
+  blog1.txt                         blog_export.csv
   blog2.txt                         (all blogs in one CSV)
   blog3.txt
 ```
@@ -102,8 +103,8 @@ cp ghl_config.json.example ghl_config.json
 ## CSV Format
 
 Exports in GHL-compatible format:
-- URL Slug (auto-generated)
-- Publish Date (from filename or current)
+- URL Slug (auto-generated from title or filename)
+- Publish Date (from filename or current date)
 - Title, Content, Author, Category, Tags
 - All HTML preserved
 
@@ -111,11 +112,11 @@ Exports in GHL-compatible format:
 
 ## Usage Examples
 
-### Weekly Export
+### Weekly CSV Export
 ```bash
 # Drop 5 blog files in new_blogs/
-python weekly.py
-# Output: csv_blogs/weekly_blogs.csv with all 5 blogs
+python core_exporter.py
+# Output: csv_blogs/blog_export.csv with all 5 blogs
 ```
 
 ### Auto-Post to GHL
@@ -124,13 +125,16 @@ python ghl_poster.py
 # Reads new_blogs/ → Posts to GHL → Creates CSV backup
 ```
 
-### Core Exporter (Advanced)
+### Custom Usage
 ```python
 from core_exporter import BlogExporter
 
-exporter = BlogExporter()
+exporter = BlogExporter(
+    source_folder="new_blogs",
+    output_folder="csv_blogs"
+)
 exporter.load_all_blogs()
-exporter.export_csv("custom.csv")
+exporter.export_csv("custom_name.csv")
 ```
 
 ---
@@ -139,7 +143,8 @@ exporter.export_csv("custom.csv")
 
 - **Multiple blogs?** Drop all files at once - processes all in one run
 - **Archive files?** Uncomment `exporter.archive_processed()` in scripts
-- **Automation?** Run `weekly.py` via cron/scheduler
+- **Custom filename?** Pass filename to `export_csv("my_export.csv")`
+- **Automation?** Run via cron/scheduler
 
 ---
 
@@ -160,4 +165,18 @@ pip install requests
 
 ---
 
-That's it! Drop files, run script, done. 🚀
+## Project Structure
+
+```
+blog-export/
+├── core_exporter.py          ⭐ CSV export
+├── ghl_poster.py             🚀 Auto-post to GHL
+├── requirements.txt          📦 Dependencies
+├── ghl_config.json.example   ⚙️ Config
+├── README.md                 📖 This file
+│
+├── new_blogs/                📝 DROP FILES HERE
+└── csv_blogs/                📄 CSV EXPORTS HERE
+```
+
+**2 scripts. 4 files total. Done.** 🚀
