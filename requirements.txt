@@ -1,0 +1,7 @@
+# Blog Export System Requirements
+
+# For GHL auto-posting only (ghl_poster.py)
+requests>=2.31.0
+
+# Note: Core exporter (core_exporter.py) needs NO dependencies
+# It uses only Python standard library
